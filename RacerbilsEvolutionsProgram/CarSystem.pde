@@ -21,5 +21,35 @@ class CarSystem {
         for (CarController controller : CarControllerList) {
             controller.display();
         }
+        fitness();
+    }
+
+    void fitness() {
+        for (int i = 0; i < CarControllerList.size(); i++) {    
+            // if(CarControllerList.get(i).bil.pointsPassed = CarControllerList.get(i).bil.pointsPassed){
+
+            Car referenceBil= CarControllerList.get(i).bil;
+            //    Car referenceHjerne= CarControllerList.get(i).hjerne.DNA;
+
+            if (millis() > referenceBil.time + 5000) {
+                if (referenceBil.pointsPassedTemp >= referenceBil.pointsPassed) {
+                    CarControllerList.remove(CarControllerList.get(i));
+                }
+                referenceBil.pointsPassedTemp = referenceBil.pointsPassed;
+                referenceBil.time = millis();
+            }
+
+            if (referenceBil.pointsPassed ==punkter.size()) {
+                println(CarControllerList.get(i).hjerne.DNA);
+            }
+        }
+
+        for (int i = 0; i < CarControllerList.size(); i++) { //fjerner biler der går bag mål stregen
+            Car reference= CarControllerList.get(i).bil;
+            float dist= dist(reference.pos.x, reference.pos.y, punkter.get(12).x, punkter.get(12).y); 
+            if (dist<100 && reference.pointsPassed < 10) { 
+                CarControllerList.remove(CarControllerList.get(i));
+            }
+        }
     }
 }

@@ -1,8 +1,14 @@
+
+
 int x;
 int y;
-int d = 0;
+int generationTime;
+int framerate = 60;
+
+boolean d, passed;
+float recordDist = 100; 
 //populationSize: Hvor mange "controllere" der genereres, controller = bil & hjerne & sensorer
-int       populationSize  = 2;    
+int       populationSize  =2;    
 ArrayList <PVector> punkter = new ArrayList<PVector>();
 
 //CarSystem: Indholder en population af "controllere" 
@@ -27,34 +33,45 @@ void setup() {
     punkter.add(new PVector(1220, 240));
     punkter.add(new PVector(1060, 160));
     punkter.add(new PVector(820, 150));
+    punkter.add(new PVector(627, 150));
 }
 
 void draw() {
     clear();
+    frameRate(framerate);
     image(trackImage, 0, 0);  
-
     lines();
     carSystem.updateAndDisplay();
- 
-if (d == 0){    
-    println(carSystem.CarControllerList.get(0).hjerne.weights);
-    println();
-    println(carSystem.CarControllerList.get(0).hjerne.biases);
-    d++;
-}
+    checkTarget();   
+
+
 
     //TESTKODE: Frastortering af dårlige biler, for hver gang der går 200 frame - f.eks. dem der kører uden for banen
-   /* for (int i = carSystem.CarControllerList.size()-1; i >= 0; i--) {
-        SensorSystem s = carSystem.CarControllerList.get(i).sensorSystem;
-        if (s.whiteSensorFrameCount > 0) {
-            carSystem.CarControllerList.remove(carSystem.CarControllerList.get(i));
-        }
-    }*/
+    /*   for (int i = carSystem.CarControllerList.size()-1; i >= 0; i--) {
+     SensorSystem s = carSystem.CarControllerList.get(i).sensorSystem;
+     if (s.whiteSensorFrameCount > 0) {
+     carSystem.CarControllerList.remove(carSystem.CarControllerList.get(i));
+     }
+     }*/
     //
     for (int i = 0; i < punkter.size(); i++) {
         noStroke();
         fill(255, 20, 147);
         ellipse(punkter.get(i).x, punkter.get(i).y, 10, 10);
+    }
+    generationTime++;
+}
+void checkTarget() {
+
+    for (int i = 0; i<carSystem.CarControllerList.size(); i++) {
+        if (passed == false) {
+            //for(int j = 0;j<punkter.size();){
+            float distance = dist(punkter.get(0).x, punkter.get(0).y, carSystem.CarControllerList.get(i).bil.pos.x, carSystem.CarControllerList.get(i).bil.pos.y);
+            //if()
+            if (distance < recordDist) {
+                recordDist = distance;
+            }
+        }
     }
 }
 void lines() {

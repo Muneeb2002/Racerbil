@@ -8,6 +8,7 @@ class CarController {
     void update() {
         //1.)opdtarer bil 
         bil.update();
+        
         //2.)opdaterer sensorer    
         sensorSystem.updateSensorsignals(bil.pos, bil.vel);
         //3.)hjernen beregner hvor meget der skal drejes
@@ -24,4 +25,5 @@ class CarController {
         bil.displayCar();
         sensorSystem.displaySensors();
     }
+
 }
