@@ -8,7 +8,7 @@ int framerate = 60;
 boolean d, passed;
 float recordDist = 100; 
 //populationSize: Hvor mange "controllere" der genereres, controller = bil & hjerne & sensorer
-int       populationSize  =2;    
+int       populationSize  = 20;    
 ArrayList <PVector> punkter = new ArrayList<PVector>();
 
 //CarSystem: Indholder en population af "controllere" 
@@ -47,12 +47,12 @@ void draw() {
 
 
     //TESTKODE: Frastortering af dårlige biler, for hver gang der går 200 frame - f.eks. dem der kører uden for banen
-    /*   for (int i = carSystem.CarControllerList.size()-1; i >= 0; i--) {
-     SensorSystem s = carSystem.CarControllerList.get(i).sensorSystem;
-     if (s.whiteSensorFrameCount > 0) {
-     carSystem.CarControllerList.remove(carSystem.CarControllerList.get(i));
-     }
-     }*/
+    for (int i = carSystem.CarControllerList.size()-1; i >= 0; i--) {
+        SensorSystem s = carSystem.CarControllerList.get(i).sensorSystem;
+        if (s.whiteSensorFrameCount > 0) {
+            carSystem.CarControllerList.get(i).bil.vel.mult(0);
+        }
+    }
     //
     for (int i = 0; i < punkter.size(); i++) {
         noStroke();

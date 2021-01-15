@@ -29,6 +29,7 @@ class SensorSystem {
     int     lapTimeInFrames       = 10000;
 
     void displaySensors() {
+        
         strokeWeight(0.5);
         if (frontSensorSignal) { 
             fill(255, 0, 0);
