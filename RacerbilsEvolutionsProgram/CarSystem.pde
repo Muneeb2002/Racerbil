@@ -1,9 +1,9 @@
 class CarSystem {
     //CarSystem - 
     //Her kan man lave en generisk alogoritme, der skaber en optimal "hjerne" til de forhåndenværende betingelser
-
+    CarController BestCar;
     ArrayList<CarController> CarControllerList  = new ArrayList<CarController>();
-    ArrayList<CarController> newCarControllerList = new ArrayList<CarController>();
+
 
     int pointsPassedRecord = 0;
 
@@ -31,9 +31,15 @@ class CarSystem {
     }
 
     void fitness() {
+
+
+        /*   
+         */
+
+
+
         for (int i = 0; i < CarControllerList.size(); i++) {    
             // if(CarControllerList.get(i).bil.pointsPassed = CarControllerList.get(i).bil.pointsPassed){
-            NeuralNetwork referenceHjerne = CarControllerList.get(i).hjerne;
             Car referenceBil= CarControllerList.get(i).bil;
             //    Car referenceHjerne= CarControllerList.get(i).hjerne.DNA;
 
@@ -44,31 +50,65 @@ class CarSystem {
                 referenceBil.pointsPassedTemp = referenceBil.pointsPassed;
                 referenceBil.time = millis();
             }
-
+            boolean isFinished = false;
             if (referenceBil.pointsPassed ==punkter.size()) {
                 for (int j = 0; j < CarControllerList.size(); j++) {
                     CarControllerList.get(j).bil.vel.mult(0);
                 }
-                mutation();
+                
+                isFinished = true;
+                BestCar = CarControllerList.get(i);
+                
+                
             } 
+            if (isFinished) {
+                if (lapTime > generationTime) {
+                   lapTime = generationTime;
+                }
+                mutation();
+            }
             if (referenceBil.pointsPassed >= pointsPassedRecord) {
                 pointsPassedRecord = referenceBil.pointsPassed;
-                //   println("record"+pointsPassedRecord);
-                //
             }
             boolean allCarsStopped = true;
             for (int j = 0; j < CarControllerList.size(); j++) {
                 if (CarControllerList.get(j).bil.vel.x != 0 && CarControllerList.get(j).bil.vel.y != 0) {
                     allCarsStopped = false;
                     break;
-                }
+             }
             }
+
             if (allCarsStopped) {
                 if (referenceBil.pointsPassed == pointsPassedRecord) {
-                    mutation();
+                    if (isFinished == false) {
+                        BestCar = CarControllerList.get(i);
+                        mutation();
+                    }
+                } else {  
+                    for (int j = 0; j<carSystem.CarControllerList.size(); j++) {
+                        if (passed == false) {
+                            //for(int j = 0;j<punkter.size();){
+                            float distance = dist(punkter.get(0).x, punkter.get(0).y, carSystem.CarControllerList.get(j).bil.pos.x, carSystem.CarControllerList.get(j).bil.pos.y);
+                            //if()
+                            if (distance < recordDist) {
+                                recordDist = distance;
+                            }
+                        }
+                    }
+                    for (int j = 0; j<carSystem.CarControllerList.size(); j++) {
+                        float distance = dist(punkter.get(0).x, punkter.get(0).y, carSystem.CarControllerList.get(j).bil.pos.x, carSystem.CarControllerList.get(j).bil.pos.y);
+                        //if()
+                        if (distance == recordDist) {
+                            BestCar = CarControllerList.get(j);
+                            recordDist = 100;
+                            mutation();
+                        }
+                    }
                 }
             }
         }
+
+
 
         for (int i = 0; i < CarControllerList.size(); i++) { //fjerner biler der går bag mål stregen
             Car reference= CarControllerList.get(i).bil;
@@ -80,32 +120,26 @@ class CarSystem {
     }
 
     void mutation() {
-        newCarControllerList = CarControllerList;
-        for (int i = 0; i < carSystem.CarControllerList.size(); i++) { 
-            print(CarControllerList);
-
-            Car referenceBil = carSystem.newCarControllerList.get(i).bil;
-            NeuralNetwork referenceHjerne = carSystem.newCarControllerList.get(i).hjerne;
-            if (referenceBil.pointsPassed == carSystem.pointsPassedRecord) {
-                for (int j = 0; j < referenceHjerne.weights.length; j++) {
-                    if (random(1, 10)<1) {
-                        referenceHjerne.weights[j]+=random(-0.05, 0.05);
-                    }
+        CarControllerList.clear();
+        for (int i = 0; i < populationSize; i++) {
+            CarController controller = new CarController();
+            for (int j = 0; j < BestCar.hjerne.weights.length; j++) {  
+                if (random(0, 100)<1) {
+                    BestCar.hjerne.weights[j]+=random(random(0, -0.05), random(0, 0.05));
                 }
-                for (int j = 0; j < referenceHjerne.biases.length; j++) {
-                    if (random(1, 10)<1) {
-                        referenceHjerne.weights[j]+=random(-0.05, 0.05);
-                    }
-                }
-
-
-                //newCarControllerList.get(i).hjerne.weights =  referenceHjerne.weights;
-                //newCarControllerList.get(i).hjerne.biases =  referenceHjerne.biases;
-
-                CarControllerList.clear();
-                CarControllerList = newCarControllerList;
-               ;
+                controller.hjerne.weights[j]=BestCar.hjerne.weights[j];
             }
+            for (int j = 0; j < BestCar.hjerne.biases.length; j++) {  
+                if (random(0, 100)<1) {
+                    BestCar.hjerne.biases[j]+=random(random(0, -0.05), random(0, 0.05));
+                }
+                controller.hjerne.biases[j]=BestCar.hjerne.biases[j];
+            }
+
+            CarControllerList.add(controller);
         }
+        generationCounter++;
+        lastLapTime = generationTime;
+        generationTime = 0;
     }
 }

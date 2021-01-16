@@ -2,13 +2,16 @@
 
 int x;
 int y;
-int generationTime;
-int framerate = 60;
+float generationTime = 0;
+float lapTime = 1000;
+float lastLapTime = 0;
+int generationCounter = 1;
 
+int framerate = 60;
 boolean d, passed;
 float recordDist = 100; 
 //populationSize: Hvor mange "controllere" der genereres, controller = bil & hjerne & sensorer
-int       populationSize  = 20;    
+int       populationSize  = 100;    
 ArrayList <PVector> punkter = new ArrayList<PVector>();
 
 //CarSystem: Indholder en population af "controllere" 
@@ -39,10 +42,24 @@ void setup() {
 void draw() {
     clear();
     frameRate(framerate);
-    image(trackImage, 0, 0);  
+    image(trackImage, 0, 0); 
+    textSize(20);
+    fill(0);
+    text("The Current Generation is: "+generationCounter, 20, 20);
+    if (lapTime == 1000) {
+        text("The fastest lap time is: N/A", 20, 110);
+    } else {
+        text("The fastest lap time is: "+nf(lapTime, 0, 3) + " seconds", 20, 110);
+    }
+    text("The Current Generation time is: "+nf(generationTime, 0, 3) + " seconds", 20, 50);
+    if (generationCounter == 1) {
+        text("The last lap time was: N/A", 20, 80);
+    } else {
+        text("The last lap time was: "+nf(lastLapTime, 0, 3) + " seconds", 20, 80);
+    }
+
     lines();
-    carSystem.updateAndDisplay();
-    checkTarget();   
+    carSystem.updateAndDisplay(); 
 
 
 
@@ -57,36 +74,11 @@ void draw() {
     for (int i = 0; i < punkter.size(); i++) {
         noStroke();
         fill(255, 20, 147);
-        ellipse(punkter.get(i).x, punkter.get(i).y, 10, 10);
+      //  ellipse(punkter.get(i).x, punkter.get(i).y, 10, 10);
     }
-    generationTime++;
+    generationTime+=1/frameRate;
 }
-void checkTarget() {
 
-    for (int i = 0; i<carSystem.CarControllerList.size(); i++) {
-        if (passed == false) {
-            //for(int j = 0;j<punkter.size();){
-            float distance = dist(punkter.get(0).x, punkter.get(0).y, carSystem.CarControllerList.get(i).bil.pos.x, carSystem.CarControllerList.get(i).bil.pos.y);
-            //if()
-            if (distance < recordDist) {
-                recordDist = distance;
-            }
-        }
-    }
-}
 void lines() {
     fill(255, 0, 0);
-    //line(562,120,,);
 }
-
-
-
-/*
-Fitness skal bestå af :
- Whitesensor framecount, 
- hastighed den klarer banen på
- Hvor langt de klarer banen
- 
- 
- 
- */

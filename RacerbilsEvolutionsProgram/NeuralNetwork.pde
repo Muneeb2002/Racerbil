@@ -18,21 +18,18 @@ class NeuralNetwork {
 
     NeuralNetwork(float varians) {
         for (int i=0; i < weights.length -1; i++) {
-            weights[i] += random(-varians, varians);
+            weights[i] = random(-varians, varians);
         }
 
         for (int i=0; i < biases.length -1; i++) {
-            biases[i] += random(-varians, varians);
+            biases[i] = random(-varians, varians);
         }   
         DNA = concat(weights, biases);
         // println(DNA);
     }
 
-    NeuralNetwork mutation() {
-        NeuralNetwork newNeuralNetwork = new NeuralNetwork(2);
+   NeuralNetwork() {
        
-        
-        return newNeuralNetwork;
     }
 
 

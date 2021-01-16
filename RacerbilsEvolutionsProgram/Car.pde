@@ -36,7 +36,6 @@ class Car {
                             passed = true;
                          
                         }
-                        //println(pointsPassed);
                     }
                 }
             }
