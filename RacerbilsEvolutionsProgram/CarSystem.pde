@@ -125,21 +125,8 @@ class CarSystem {
 
     void mutation() {
         CarControllerList.clear();
-        int random = (int)random(0, populationSize);
-        // println(random);
         for (int i = 0; i < populationSize; i++) {
             CarController controller = new CarController();
-            /* if (i == random) {
-             for (int j = 0; j < BestCar.hjerne.weights.length; j++) {  
-             BestCar.hjerne.weights[j]=random(-2, 2);
-             
-             controller.hjerne.weights[j]=BestCar.hjerne.weights[j];
-             }
-             for (int j = 0; j < BestCar.hjerne.biases.length; j++) {  
-             BestCar.hjerne.biases[j]=random(-2, 2);
-             controller.hjerne.biases[j]=BestCar.hjerne.biases[j];
-             }
-             } else {*/
             for (int j = 0; j < BestCar.hjerne.weights.length; j++) {  
                 if (random(0, 100)<1) {
                     BestCar.hjerne.weights[j]+=random(random(0, -0.1), random(0, 0.1));
@@ -151,7 +138,6 @@ class CarSystem {
                     BestCar.hjerne.biases[j]+=random(random(0, -0.1), random(0, 0.1));
                 }
                 controller.hjerne.biases[j]=BestCar.hjerne.biases[j];
-                //}
             }
 
             CarControllerList.add(controller);
