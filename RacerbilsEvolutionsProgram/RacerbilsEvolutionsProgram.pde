@@ -12,7 +12,7 @@ boolean d, passed;
 float recordDist = 100; 
 //populationSize: Hvor mange "controllere" der genereres, controller = bil & hjerne & sensorer
 int       populationSize  = 100;    
-ArrayList <PVector> punkter = new ArrayList<PVector>();
+ArrayList <PVector> punkter = new ArrayList<PVector>(); 
 
 //CarSystem: Indholder en population af "controllere" 
 CarSystem carSystem       = new CarSystem(populationSize);
@@ -49,13 +49,13 @@ void draw() {
     if (lapTime == 1000) {
         text("The fastest lap time is: N/A", 20, 110);
     } else {
-        text("The fastest lap time is: "+nf(lapTime, 0, 3) + " seconds", 20, 110);
+        text("The fastest lap time is: "+ lapTime + " seconds", 20, 110);
     }
     text("The Current Generation time is: "+nf(generationTime, 0, 3) + " seconds", 20, 50);
     if (generationCounter == 1) {
         text("The last lap time was: N/A", 20, 80);
     } else {
-        text("The last lap time was: "+nf(lastLapTime, 0, 3) + " seconds", 20, 80);
+        text("The last lap time was: "+lastLapTime + " seconds", 20, 80);
     }
 
     lines();
@@ -74,7 +74,7 @@ void draw() {
     for (int i = 0; i < punkter.size(); i++) {
         noStroke();
         fill(255, 20, 147);
-      //  ellipse(punkter.get(i).x, punkter.get(i).y, 10, 10);
+        ellipse(punkter.get(i).x, punkter.get(i).y, 10, 10);
     }
     generationTime+=1/frameRate;
 }

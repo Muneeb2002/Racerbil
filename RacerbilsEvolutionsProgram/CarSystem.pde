@@ -51,19 +51,21 @@ class CarSystem {
                 referenceBil.time = millis();
             }
             boolean isFinished = false;
+           /* circle(mouseX, mouseY, 100);
+            if (dist(mouseX, mouseY, referenceBil.pos.x, referenceBil.pos.y)<100) {
+                referenceBil.vel.mult(0);
+            }*/
             if (referenceBil.pointsPassed ==punkter.size()) {
                 for (int j = 0; j < CarControllerList.size(); j++) {
                     CarControllerList.get(j).bil.vel.mult(0);
                 }
-                
+
                 isFinished = true;
                 BestCar = CarControllerList.get(i);
-                
-                
             } 
             if (isFinished) {
                 if (lapTime > generationTime) {
-                   lapTime = generationTime;
+                    lapTime = generationTime;
                 }
                 mutation();
             }
@@ -75,7 +77,7 @@ class CarSystem {
                 if (CarControllerList.get(j).bil.vel.x != 0 && CarControllerList.get(j).bil.vel.y != 0) {
                     allCarsStopped = false;
                     break;
-             }
+                }
             }
 
             if (allCarsStopped) {
@@ -83,6 +85,7 @@ class CarSystem {
                     if (isFinished == false) {
                         BestCar = CarControllerList.get(i);
                         mutation();
+                       // allCarsStopped = true;
                     }
                 } else {  
                     for (int j = 0; j<carSystem.CarControllerList.size(); j++) {
@@ -102,6 +105,7 @@ class CarSystem {
                             BestCar = CarControllerList.get(j);
                             recordDist = 100;
                             mutation();
+                           // allCarsStopped = true;
                         }
                     }
                 }
@@ -121,25 +125,41 @@ class CarSystem {
 
     void mutation() {
         CarControllerList.clear();
+        int random = (int)random(0, populationSize);
+        // println(random);
         for (int i = 0; i < populationSize; i++) {
             CarController controller = new CarController();
+            /* if (i == random) {
+             for (int j = 0; j < BestCar.hjerne.weights.length; j++) {  
+             BestCar.hjerne.weights[j]=random(-2, 2);
+             
+             controller.hjerne.weights[j]=BestCar.hjerne.weights[j];
+             }
+             for (int j = 0; j < BestCar.hjerne.biases.length; j++) {  
+             BestCar.hjerne.biases[j]=random(-2, 2);
+             controller.hjerne.biases[j]=BestCar.hjerne.biases[j];
+             }
+             } else {*/
             for (int j = 0; j < BestCar.hjerne.weights.length; j++) {  
                 if (random(0, 100)<1) {
-                    BestCar.hjerne.weights[j]+=random(random(0, -0.05), random(0, 0.05));
+                    BestCar.hjerne.weights[j]+=random(random(0, -0.1), random(0, 0.1));
                 }
                 controller.hjerne.weights[j]=BestCar.hjerne.weights[j];
             }
             for (int j = 0; j < BestCar.hjerne.biases.length; j++) {  
                 if (random(0, 100)<1) {
-                    BestCar.hjerne.biases[j]+=random(random(0, -0.05), random(0, 0.05));
+                    BestCar.hjerne.biases[j]+=random(random(0, -0.1), random(0, 0.1));
                 }
                 controller.hjerne.biases[j]=BestCar.hjerne.biases[j];
+                //}
             }
 
             CarControllerList.add(controller);
         }
+        println("Generation " + generationCounter + "'s fastest lap time was " + nf(generationTime,0,4) + " seconds");
         generationCounter++;
         lastLapTime = generationTime;
         generationTime = 0;
+        passed = false;
     }
 }
